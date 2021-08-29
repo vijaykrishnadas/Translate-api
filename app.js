@@ -1,9 +1,12 @@
 const express = require('express');
 const mysql = require('mysql');
 const translate = require('@vitalets/google-translate-api');
+const e = require('express');
 
 const app =  express();
 
+let connection;
+let db_name = "server"
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -13,24 +16,50 @@ app.use(express.urlencoded({
 
 const PORT = process.env.PORT || 5000;
 
-var connection = mysql.createConnection({
+
+var con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
-    database: "server"
 });
 
-connection.connect((err)=>{
+con.connect((err)=>{
     if(err){
         console.log(err);
     }
     else{
-        console.log("Database Connected");
+        console.log("Connection Created");
+        var query = `CREATE DATABASE ${db_name}`;
+        con.query(query,(err, res)=>{
+            if(err){
+                throw err;
+            }
+            else{
+                console.log("Database Created");
+                 connection = mysql.createConnection({
+                    host: "localhost",
+                    user: "root",
+                    password: "",
+                    database: db_name
+                });
+
+                var query = "CREATE TABLE translate (UserInput VARCHAR(255), TranslatedText VARCHAR(255))"
+                
+                connection.query(query,(err, res)=>{
+                    if(err){
+                        throw err;
+                     }
+                     else{
+                         console.log("Table Created");
+                     }
+                });
+            }
+        });
     }
 });
 
 app.get('/data',(req,res)=>{
-    const query ="SELECT * FROM data"
+    const query ="SELECT * FROM translate"
 
     connection.query(query,(err, result)=>{
         if(err){
@@ -53,6 +82,7 @@ var languages2 = {
 };
 
 app.post('/data', (req,res)=>{
+    console.log("yes");
     console.log(req.body.user);
     var userInput = req.body.user;
     let lang = req.body.lang;
@@ -61,15 +91,13 @@ app.post('/data', (req,res)=>{
         if(language == lang)
         {
 
-            console.log(typeof(languages));
-
             var l =languages2[lang];
 
             translate(userInput, {to: l}).then(res => {
                 converted = res.text
             })
             .then(()=>{
-                var query = `INSERT INTO data (UserInput, Translated) VALUES ("${userInput}", "${converted}")`;
+                var query = `INSERT INTO translate (UserInput, TranslatedText) VALUES ("${userInput}", "${converted}")`;
                 connection.query(query,(err,result)=>{
                     if(err){
                         console.log(err);
