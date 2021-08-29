@@ -13,15 +13,19 @@ app.use(express.urlencoded({
   extended: true
 }));
 
+// Setting the PORT number
 
 const PORT = process.env.PORT || 5000;
 
+
+// Creating a connection to our mysql database
 
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "",
 });
+
 
 con.connect((err)=>{
     if(err){
@@ -58,6 +62,8 @@ con.connect((err)=>{
     }
 });
 
+//Setting the routes
+
 app.get('/data',(req,res)=>{
     const query ="SELECT * FROM translate"
 
@@ -73,6 +79,8 @@ app.get('/data',(req,res)=>{
 
 var converted;
 
+//list of all the languages supported
+
 var languages = ["english","tamil","telegu","hindi"];
 var languages2 = {
     english: "en",
@@ -80,6 +88,8 @@ var languages2 = {
     telegu:"te",
    hindi:"hi"
 };
+
+//post request to get the translated data and store in our mysql database
 
 app.post('/data', (req,res)=>{
     console.log("yes");
@@ -115,6 +125,8 @@ app.post('/data', (req,res)=>{
     });
 });
 
+
+//Server listening to PORT
 
 app.listen(PORT,()=>{
     console.log(`listening on PORT ${PORT}`);
