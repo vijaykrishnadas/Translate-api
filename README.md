@@ -35,7 +35,7 @@ clone the Repo :
 
 ```
     npm install
-    nodemon app 
+    node app 
 ```
 ## NOTE -
  Have XAMPP running in the background before starting the server.
