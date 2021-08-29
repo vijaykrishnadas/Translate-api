@@ -92,7 +92,6 @@ var languages2 = {
 //post request to get the translated data and store in our mysql database
 
 app.post('/data', (req,res)=>{
-    console.log("yes");
     console.log(req.body.user);
     var userInput = req.body.user;
     let lang = req.body.lang;
