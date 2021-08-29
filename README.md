@@ -51,6 +51,15 @@ clone the Repo :
  Key  :  user      (The value for this key should be the text that you want to translate)
  Key : lang     (The value for this key should be the language in which you want the text to be translated to.)
 ```
+***
+
+# Example :
+
+user : "Hello"
+
+lang : "hindi" 
+
+output : "नमस्ते"
 
 #### Visit : http://localhost:5000/data to get your data.
 
